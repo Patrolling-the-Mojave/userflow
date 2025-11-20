@@ -25,7 +25,8 @@
 		<module>gateway-api</module>
 		<module>file-storing-service</module>
 		<module>file-analisys-service</module>
-	</modules>
+        <module>dto</module>
+    </modules>
 	<scm>
 		<connection/>
 		<developerConnection/>

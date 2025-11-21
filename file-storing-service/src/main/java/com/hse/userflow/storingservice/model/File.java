@@ -1,6 +1,7 @@
 package com.hse.userflow.storingservice.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "files")
 @Data
+@Builder
 public class File {
     @Id
     private Integer id;

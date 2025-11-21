@@ -10,6 +10,5 @@ import java.time.LocalDateTime;
 public class FileUploadResponseDto {
     private Integer fileId;
     private String fileName;
-    private String fileUrl;
     private LocalDateTime loadedAt;
 }

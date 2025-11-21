@@ -7,5 +7,6 @@ public interface UserService {
 
     UserDto addUser(UserCreateDto newUser);
     void deleteUser(Integer userId);
+    UserDto findById(Integer userId);
 
 }

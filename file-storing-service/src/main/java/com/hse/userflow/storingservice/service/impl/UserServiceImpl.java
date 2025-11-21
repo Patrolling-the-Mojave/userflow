@@ -36,6 +36,11 @@ public class UserServiceImpl implements UserService {
         return toDto(user);
     }
 
+    @Override
+    public UserDto findById(Integer userId) {
+        return toDto(getUserById(userId));
+    }
+
     private User getUserById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("пользователь с id " + id));
     }

@@ -1,14 +1,20 @@
 package com.hse.userflow.storingservice.service.impl;
 
-import com.hse.userflow.dto.FileUploadResponseDto;
+import com.hse.userflow.dto.AnalysisRequest;
+import com.hse.userflow.dto.FileContentDto;
+import com.hse.userflow.dto.FileDto;
 import com.hse.userflow.storingservice.exception.FileDownloadException;
 import com.hse.userflow.storingservice.exception.FileUploadException;
 import com.hse.userflow.storingservice.exception.NotFoundException;
+import com.hse.userflow.storingservice.mapper.FileMapper;
 import com.hse.userflow.storingservice.model.File;
+import com.hse.userflow.storingservice.model.User;
+import com.hse.userflow.storingservice.model.Work;
 import com.hse.userflow.storingservice.repository.FileRepository;
 import com.hse.userflow.storingservice.repository.UserRepository;
 import com.hse.userflow.storingservice.repository.WorkRepository;
 import com.hse.userflow.storingservice.service.S3FileService;
+import com.hse.userflow.storingservice.service.client.AnalysisClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +31,9 @@ import software.amazon.awssdk.services.s3.model.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static com.hse.userflow.storingservice.mapper.FileMapper.*;
 import static com.hse.userflow.storingservice.mapper.FileMapper.toDto;
 
 @Service
@@ -35,6 +43,7 @@ public class S3FileServiceImpl implements S3FileService {
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
     private final WorkRepository workRepository;
+    private final AnalysisClient analysisClient;
     private final S3Client s3Client;
 
     @Value("${s3.bucket-name}")
@@ -74,9 +83,9 @@ public class S3FileServiceImpl implements S3FileService {
 
     @Override
     @Transactional
-    public FileUploadResponseDto uploadFile(Integer workId, Integer studentId, MultipartFile multipartFile) {
-        doesUserExists(studentId);
-        doesWorkExists(workId);
+    public FileDto uploadFile(Integer workId, Integer studentId, MultipartFile multipartFile) {
+        User student = getUserById(studentId);
+        Work work = getWorkById(workId);
         String s3Key = generateS3Key(workId, studentId, multipartFile.getOriginalFilename());
         try {
             uploadToS3(multipartFile, s3Key);
@@ -86,10 +95,20 @@ public class S3FileServiceImpl implements S3FileService {
                     .uploadedAt(LocalDateTime.now())
                     .s3Key(s3Key)
                     .mimeType(multipartFile.getContentType())
-                    .workId(workId)
-                    .studentId(studentId)
+                    .work(work)
+                    .student(student)
                     .build();
-            return toDto(fileRepository.save(file));
+            File result = fileRepository.save(file);
+
+            AnalysisRequest request = AnalysisRequest.builder()
+                    .fileId(result.getId())
+                    .requestTime(LocalDateTime.now())
+                    .s3Key(result.getS3Key())
+                    .studentId(result.getStudent().getId())
+                    .workId(result.getWork().getId())
+                    .build();
+            analysisClient.triggerAnalysisService(request);
+            return toDto(result);
         } catch (IOException exception) {
             throw new FileUploadException("не удалось загрузить файл", exception);
         }
@@ -106,6 +125,15 @@ public class S3FileServiceImpl implements S3FileService {
     }
 
     @Override
+    public List<FileContentDto> findAllEarlierReports(Integer fileId) {
+        File file = getFileById(fileId);
+        return fileRepository.findAllEarlierReports(file.getWork().getId(), file.getUploadedAt())
+                .stream()
+                .map(f -> toContentDto(f, getFileContentFromS3(f.getS3Key())))
+                .toList();
+    }
+
+    @Override
     public ResponseEntity<byte[]> downloadFile(Integer fileId) {
         File file = getFileById(fileId);
         try {
@@ -119,12 +147,12 @@ public class S3FileServiceImpl implements S3FileService {
             headers.setCacheControl("no-cache");
             log.debug("Файл {} успешно подготовлен для скачивания", fileId);
             return new ResponseEntity<>(content, headers, HttpStatus.OK);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new FileDownloadException("произошла ошибка при скачивании файла", exception);
         }
     }
 
-    public byte[] getFileContentFromS3(String s3Key) {
+    private byte[] getFileContentFromS3(String s3Key) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(s3Key)
@@ -145,16 +173,14 @@ public class S3FileServiceImpl implements S3FileService {
                 fileName.substring(fileName.lastIndexOf('.')) : "";
     }
 
-    private void doesUserExists(Integer userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("пользователь с id " + userId + " не найден");
-        }
+    private User getUserById(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("пользователь с id " + userId + " не найден"));
     }
 
-    private void doesWorkExists(Integer workId) {
-        if (!workRepository.existsById(workId)) {
-            throw new NotFoundException("работа с id " + workId + " не найдена");
-        }
+    private Work getWorkById(Integer workId) {
+        return workRepository.findById(workId).orElseThrow(() ->
+                new NotFoundException("работа с id " + workId + " не найдена"));
     }
 
     private File getFileById(Integer fileId) {

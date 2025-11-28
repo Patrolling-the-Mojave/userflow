@@ -1,14 +1,19 @@
 package com.hse.userflow.storingservice.service;
 
-import com.hse.userflow.dto.FileUploadResponseDto;
+import com.hse.userflow.dto.FileContentDto;
+import com.hse.userflow.dto.FileDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 public interface S3FileService {
-    FileUploadResponseDto uploadFile(Integer workId, Integer studentId, MultipartFile multipartFile);
+    FileDto uploadFile(Integer workId, Integer studentId, MultipartFile multipartFile);
+
     ResponseEntity<byte[]> downloadFile(Integer fileId);
+
     void deleteFile(Integer fileId);
+
+    List<FileContentDto> findAllEarlierReports(Integer fileId);
 
 }

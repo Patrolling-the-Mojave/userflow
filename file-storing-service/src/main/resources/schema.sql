@@ -25,3 +25,14 @@ CREATE TABLE IF NOT EXISTS files (
     CONSTRAINT unique_student_work
         UNIQUE (student_id, work_id)
 );
+
+CREATE TABLE IF NOT EXISTS reports (
+    work_id INTEGER NOT NULL,
+    work_name VARCHAR NOT NULL,
+    student_id INTEGER NOT NULL,
+    student_name VARCHAR NOT NULL,
+    plagiarism_detected BOOL NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    CONSTRAINT PRIMARY KEY (work_id, student_id)
+);

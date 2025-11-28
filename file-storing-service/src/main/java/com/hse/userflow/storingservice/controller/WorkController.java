@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/works")
+@RequestMapping("/api/works")
 @RequiredArgsConstructor
 public class WorkController {
     private final WorkService workService;

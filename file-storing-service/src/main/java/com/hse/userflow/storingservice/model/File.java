@@ -14,16 +14,14 @@ public class File {
     @Id
     private Integer id;
     @ManyToOne
-    private Integer workId;
+    private Work work;
     @ManyToOne
-    private Integer studentId;
-    @Column(unique = true)
+    private User student;
+    @Column(unique = true, nullable = false)
     private String originalFileName;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String s3Key;
     private String mimeType;
     private Long fileSize;
     private LocalDateTime uploadedAt;
-
-
 }

@@ -13,9 +13,11 @@ import java.time.LocalDateTime;
 public class File {
     @Id
     private Integer id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "work_id")
     private Work work;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
     private User student;
     @Column(unique = true, nullable = false)
     private String originalFileName;

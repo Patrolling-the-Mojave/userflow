@@ -34,6 +34,51 @@ services:
       timeout: 20s
       retries: 3
 
+  file-storage:
+    build:
+      context: ./file-storing-service
+      dockerfile: Dockerfile
+    container_name: storage-service
+    ports:
+      - "9090:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userflow
+      SPRING_DATASOURCE_USERNAME: dbuser
+      SPRING_DATASOURCE_PASSWORD: 12345
+
+  file-analysis-service:
+    build:
+      context: ./file-analisys-service
+      dockerfile: Dockerfile
+    container_name: file-analysis-service
+    ports:
+      - 9091:9091
+    depends_on:
+       file-storage:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userflow
+      SPRING_DATASOURCE_USERNAME: dbuser
+      SPRING_DATASOURCE_PASSWORD: 12345
+
+  gateway-api:
+    build:
+      context: ./gateway-api
+      dockerfile: Dockerfile
+    container_name: gateway-api
+    ports:
+      - 8080:8080
+    depends_on:
+      - file-storage
+      - file-analysis-service
+
+
+
 volumes:
   postgres_data:
   minio_data:

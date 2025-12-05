@@ -15,8 +15,8 @@ public interface FileRepository extends JpaRepository<File, Integer> {
             SELECT f FROM File f
             JOIN FETCH f.student
             JOIN FETCH f.work
-            WHERE f.uploadedAt < uploadedAt
-            AND f.work.id = workId
+            WHERE f.uploadedAt < :uploadedAt
+            AND f.work.id = :workId
             """)
     List<File> findAllEarlierReports (@Param("workId") Integer workId, @Param("uploadedAt")LocalDateTime uploadedAt);
 }

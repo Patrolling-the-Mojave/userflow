@@ -1,11 +1,9 @@
 package com.hse.userflow.storingservice.controller;
 
 import com.hse.userflow.dto.FileContentDto;
-import com.hse.userflow.dto.FileDto;
 import com.hse.userflow.storingservice.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,6 @@
 package com.hse.userflow.storingservice.controller;
 
-import com.hse.userflow.dto.FileDto;
+import com.hse.userflow.dto.file.FileDto;
 import com.hse.userflow.storingservice.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PublicFileController {
     private final S3FileService fileService;
 
-    @PostMapping("/works/{workId}/users/{userId}/upload")
+    @PostMapping("/works/{workId}/students/{studentId}/upload")
     public FileDto upload(@RequestParam("file") MultipartFile file,
                           @PathVariable Integer workId,
-                          @PathVariable Integer userid
+                          @PathVariable Integer studentId
     ) {
-        return fileService.uploadFile(workId, userid, file);
+        return fileService.uploadFile(workId, studentId, file);
     }
 
     @GetMapping("/download/{fileId}")

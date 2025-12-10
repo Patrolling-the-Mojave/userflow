@@ -1,69 +1,87 @@
 package com.hse.userflow.gateway.client;
 
-import com.hse.userflow.dto.WorkCreateDto;
-import com.hse.userflow.dto.WorkDto;
+import com.hse.userflow.dto.error.ErrorResponse;
+import com.hse.userflow.dto.work.WorkCreateDto;
+import com.hse.userflow.dto.work.WorkDto;
 import com.hse.userflow.gateway.exception.GateWayException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
+
+import static com.hse.userflow.gateway.utils.ErrorParser.toErrorResponse;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class WorkStorageClient {
-    private final RestTemplate restTemplate;
-
-    @Value("${storing-service.url}")
-    private String workStorageServiceUrl;
+    private static final String WORKS_URI = "/api/works";
+    private final WebClient fileStorageWebClient;
 
     public WorkDto createWork(WorkCreateDto newWork) {
-        String url = workStorageServiceUrl + "/api/works";
-
         try {
-            log.debug("Creating new work: {}", newWork);
+            return fileStorageWebClient
+                    .post()
+                    .uri(WORKS_URI)
+                    .bodyValue(newWork)
+                    .retrieve()
+                    .bodyToMono(WorkDto.class)
+                    .block();
 
-            ResponseEntity<WorkDto> response = restTemplate.postForEntity(
-                    url,
-                    newWork,
-                    WorkDto.class
-            );
-
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                log.info("Work created successfully. Work ID: {}", response.getBody());
-                return response.getBody();
-            } else {
-                throw new GateWayException("Create work failed with status: " + response.getStatusCode());
-            }
-
-        } catch (HttpClientErrorException.BadRequest e) {
-            log.error("Bad request creating work: {}", e.getResponseBodyAsString());
-            throw new GateWayException("Invalid work data: " + e.getResponseBodyAsString(), e);
-        } catch (Exception e) {
-            log.error("Unexpected error creating work", e);
-            throw new GateWayException("Create work failed due to unexpected error", e);
+        } catch (WebClientResponseException e) {
+            final ErrorResponse errorResponse = toErrorResponse(e);
+            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()), errorResponse);
         }
     }
 
     public void deleteWork(Integer workId) {
-        String url = workStorageServiceUrl + "/api/works/{workId}";
-
         try {
-            log.debug("Deleting work by ID: {}", workId);
+            fileStorageWebClient
+                    .delete()
+                    .uri(WORKS_URI + "/{workId}", workId)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
 
-            restTemplate.delete(url, workId);
-            log.info("Work deleted successfully. Work ID: {}", workId);
-
-        } catch (HttpClientErrorException.NotFound e) {
-            log.warn("Work not found for deletion. Work ID: {}", workId);
-            throw new GateWayException("Work not found with ID: " + workId);
-        } catch (ResourceAccessException e) {
-            log.error("Work storage service is unavailable: {}", workStorageServiceUrl, e);
-            throw new GateWayException("Work storage service is unavailable", e);
+        } catch (WebClientResponseException e) {
+            final ErrorResponse errorResponse = toErrorResponse(e);
+            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()), errorResponse);
         }
     }
+
+    public WorkDto getWorkById(Integer workId) {
+        try {
+            return fileStorageWebClient
+                    .get()
+                    .uri(WORKS_URI + "/{workId}", workId)
+                    .retrieve()
+                    .bodyToMono(WorkDto.class)
+                    .block();
+
+        } catch (WebClientResponseException e) {
+            final ErrorResponse errorResponse = toErrorResponse(e);
+            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()), errorResponse);
+        }
+    }
+
+    public List<WorkDto> getAllWorks() {
+        try {
+            return fileStorageWebClient
+                    .get()
+                    .uri(WORKS_URI)
+                    .retrieve()
+                    .bodyToFlux(WorkDto.class)
+                    .collectList()
+                    .block();
+
+        } catch (WebClientResponseException e) {
+            final ErrorResponse errorResponse = toErrorResponse(e);
+            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()), errorResponse);
+        }
+    }
+
 }

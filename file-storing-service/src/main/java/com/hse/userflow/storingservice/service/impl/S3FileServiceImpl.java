@@ -1,12 +1,11 @@
 package com.hse.userflow.storingservice.service.impl;
 
-import com.hse.userflow.dto.AnalysisRequest;
-import com.hse.userflow.dto.FileContentDto;
-import com.hse.userflow.dto.FileDto;
+import com.hse.userflow.dto.file.FileContentDto;
+import com.hse.userflow.dto.file.FileDto;
+import com.hse.userflow.dto.report.AnalysisRequest;
 import com.hse.userflow.storingservice.exception.FileDownloadException;
 import com.hse.userflow.storingservice.exception.FileUploadException;
 import com.hse.userflow.storingservice.exception.NotFoundException;
-import com.hse.userflow.storingservice.mapper.FileMapper;
 import com.hse.userflow.storingservice.model.File;
 import com.hse.userflow.storingservice.model.User;
 import com.hse.userflow.storingservice.model.Work;
@@ -33,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.hse.userflow.storingservice.mapper.FileMapper.*;
+import static com.hse.userflow.storingservice.mapper.FileMapper.toContentDto;
 import static com.hse.userflow.storingservice.mapper.FileMapper.toDto;
 
 @Service
@@ -150,6 +149,12 @@ public class S3FileServiceImpl implements S3FileService {
         } catch (Exception exception) {
             throw new FileDownloadException("произошла ошибка при скачивании файла", exception);
         }
+    }
+
+    @Override 
+    public FileContentDto getFileContent(Integer fileId) {
+        File file = getFileById(fileId);
+        return toContentDto(file, getFileContentFromS3(file.getS3Key()));
     }
 
     private byte[] getFileContentFromS3(String s3Key) {

@@ -1,6 +1,6 @@
 package com.hse.userflow.storingservice.controller;
 
-import com.hse.userflow.dto.FileContentDto;
+import com.hse.userflow.dto.file.FileContentDto;
 import com.hse.userflow.storingservice.service.S3FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,5 +21,10 @@ public class InternalFileController {
     @GetMapping("/{fileId}/earlier")
     public List<FileContentDto> findAllEarlierReports(@PathVariable Integer fileId) {
         return fileService.findAllEarlierReports(fileId);
+    }
+
+    @GetMapping("/{fileId}")
+    public FileContentDto getFileContent(@PathVariable Integer fileId) {
+        return fileService.getFileContent(fileId);
     }
 }

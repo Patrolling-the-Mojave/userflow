@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.service;
 
-import com.hse.userflow.dto.UserCreateDto;
-import com.hse.userflow.dto.UserDto;
+import com.hse.userflow.dto.user.UserCreateDto;
+import com.hse.userflow.dto.user.UserDto;
 
 public interface UserService {
 

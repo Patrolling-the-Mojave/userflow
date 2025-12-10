@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.service;
 
-import com.hse.userflow.dto.WorkCreateDto;
-import com.hse.userflow.dto.WorkDto;
+import com.hse.userflow.dto.work.WorkCreateDto;
+import com.hse.userflow.dto.work.WorkDto;
 
 public interface WorkService {
     WorkDto addWord(WorkCreateDto newWork);

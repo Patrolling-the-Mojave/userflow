@@ -1,7 +1,7 @@
 package com.hse.analisysservice.service.client;
 
 import com.hse.analisysservice.exception.AnalysisServiceException;
-import com.hse.userflow.dto.FileContentDto;
+import com.hse.userflow.dto.file.FileContentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

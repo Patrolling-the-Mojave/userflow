@@ -1,7 +1,7 @@
 package com.hse.analisysservice.controller;
 
 import com.hse.analisysservice.service.ReportService;
-import com.hse.userflow.dto.ReportDto;
+import com.hse.userflow.dto.report.ReportDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

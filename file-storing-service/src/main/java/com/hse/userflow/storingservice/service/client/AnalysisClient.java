@@ -1,6 +1,6 @@
 package com.hse.userflow.storingservice.service.client;
 
-import com.hse.userflow.dto.AnalysisRequest;
+import com.hse.userflow.dto.report.AnalysisRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.InternalException;

@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.controller;
 
-import com.hse.userflow.dto.WorkCreateDto;
-import com.hse.userflow.dto.WorkDto;
+import com.hse.userflow.dto.work.WorkCreateDto;
+import com.hse.userflow.dto.work.WorkDto;
 import com.hse.userflow.storingservice.service.WorkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

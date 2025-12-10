@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.service;
 
-import com.hse.userflow.dto.FileContentDto;
-import com.hse.userflow.dto.FileDto;
+import com.hse.userflow.dto.file.FileContentDto;
+import com.hse.userflow.dto.file.FileDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,5 +15,7 @@ public interface S3FileService {
     void deleteFile(Integer fileId);
 
     List<FileContentDto> findAllEarlierReports(Integer fileId);
+
+    FileContentDto getFileContent(Integer fileId);
 
 }

@@ -1,8 +1,7 @@
 package com.hse.analisysservice.mapper;
 
 import com.hse.analisysservice.model.Report;
-import com.hse.userflow.dto.FileContentDto;
-import com.hse.userflow.dto.ReportDto;
+import com.hse.userflow.dto.report.ReportDto;
 
 import java.util.List;
 

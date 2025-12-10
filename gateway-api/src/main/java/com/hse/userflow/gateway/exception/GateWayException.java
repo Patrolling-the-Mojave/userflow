@@ -1,11 +1,14 @@
 package com.hse.userflow.gateway.exception;
 
-public class GateWayException extends RuntimeException {
-  public GateWayException(String message, Throwable cause) {
-    super(message, cause);
-  }
+import com.hse.userflow.dto.error.ErrorResponse;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import org.springframework.http.HttpStatus;
 
-  public GateWayException(String message){
-    super(message);
-  }
+@AllArgsConstructor
+@ToString
+public class GateWayException extends RuntimeException {
+    private final HttpStatus status;
+    private final ErrorResponse errorResponse;
+
 }

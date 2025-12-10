@@ -1,4 +1,4 @@
-package com.hse.userflow.dto;
+package com.hse.userflow.dto.work;
 
 import lombok.Builder;
 import lombok.Data;

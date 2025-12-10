@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.mapper;
 
-import com.hse.userflow.dto.FileContentDto;
-import com.hse.userflow.dto.FileDto;
+import com.hse.userflow.dto.file.FileContentDto;
+import com.hse.userflow.dto.file.FileDto;
 import com.hse.userflow.storingservice.model.File;
 
 import java.util.List;

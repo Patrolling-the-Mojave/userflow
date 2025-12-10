@@ -1,6 +1,6 @@
 package com.hse.analisysservice.service;
 
-import com.hse.userflow.dto.ReportDto;
+import com.hse.userflow.dto.report.ReportDto;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.hse.userflow.storingservice.mapper;
 
-import com.hse.userflow.dto.WorkCreateDto;
-import com.hse.userflow.dto.WorkDto;
+import com.hse.userflow.dto.work.WorkCreateDto;
+import com.hse.userflow.dto.work.WorkDto;
 import com.hse.userflow.storingservice.model.Work;
 
 import java.time.LocalDateTime;

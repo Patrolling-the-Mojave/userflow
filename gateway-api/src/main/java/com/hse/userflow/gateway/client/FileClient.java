@@ -8,10 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -61,7 +60,7 @@ public class FileClient {
 
         } catch (WebClientResponseException e) {
             final ErrorResponse errorResponse = toErrorResponse(e);
-            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()),errorResponse);
+            throw new GateWayException(HttpStatus.valueOf(e.getStatusCode().value()), errorResponse);
         }
     }
 
@@ -112,9 +111,17 @@ public class FileClient {
     }
 
     private MultiValueMap<String, Object> createMultipartBody(MultipartFile file) {
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("file", file.getResource());
-        return parts;
+        if (file == null) {
+            throw new IllegalArgumentException("произошла ошибка во время сохранения файла");
+        }
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("file", file.getResource())
+                .filename(file.getOriginalFilename())
+                .contentType(MediaType.parseMediaType(
+                        file.getContentType() != null ?
+                                file.getContentType() : "application/octet-stream"));
+
+        return (MultiValueMap<String, Object>) (MultiValueMap<?, ?>) builder.build();
     }
 
 }

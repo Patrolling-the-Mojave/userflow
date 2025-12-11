@@ -81,7 +81,6 @@ public class S3FileServiceImpl implements S3FileService {
     }
 
     @Override
-    @Transactional
     public FileDto uploadFile(Integer workId, Integer studentId, MultipartFile multipartFile) {
         User student = getUserById(studentId);
         Work work = getWorkById(workId);
@@ -98,7 +97,7 @@ public class S3FileServiceImpl implements S3FileService {
                     .student(student)
                     .build();
             File result = fileRepository.save(file);
-
+            log.debug("файл успешно сохранен под id{}", result.getId());
             AnalysisRequest request = AnalysisRequest.builder()
                     .fileId(result.getId())
                     .requestTime(LocalDateTime.now())
@@ -151,7 +150,7 @@ public class S3FileServiceImpl implements S3FileService {
         }
     }
 
-    @Override 
+    @Override
     public FileContentDto getFileContent(Integer fileId) {
         File file = getFileById(fileId);
         return toContentDto(file, getFileContentFromS3(file.getS3Key()));

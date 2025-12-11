@@ -41,6 +41,4 @@ public class GlobalExceptionHandler {
         log.error("exception", exception);
         return new ErrorResponse("exception", exception.getMessage());
     }
-
-
 }

@@ -21,7 +21,7 @@ public class PublicFileController {
         return fileService.uploadFile(workId, studentId, file);
     }
 
-    @GetMapping("/download/{fileId}")
+    @GetMapping("/{fileId}/download")
     public ResponseEntity<byte[]> download(@PathVariable Integer fileId) {
         return fileService.downloadFile(fileId);
     }

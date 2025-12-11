@@ -50,7 +50,8 @@ public class FileController {
                     description = "Ошибка сервера при загрузке файла"
             )
     })
-    @PostMapping(value = "/works/{workId}/students/{studentId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/works/{workId}/students/{studentId}/upload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FileDto uploadFile(
             @Parameter(description = "ID работы", required = true, example = "123")
             @PathVariable Integer workId,
@@ -60,10 +61,9 @@ public class FileController {
 
             @Parameter(
                     description = "Файл работы (PDF, DOC, DOCX, TXT)",
-                    required = true,
                     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
             )
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam(value = "file", required = false) MultipartFile file) {
         return fileClient.uploadFile(file, workId, studentId);
     }
 

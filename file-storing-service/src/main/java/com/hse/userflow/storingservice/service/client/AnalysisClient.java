@@ -21,7 +21,7 @@ public class AnalysisClient {
         try {
             restTemplate.postForObject(analysisServiceUrl+"/analyze", request, Void.class);
         } catch (Exception e) {
-            throw new InternalException("произошла ошибка при обращении к сервису анализа отчетов");
+            throw new InternalException("произошла ошибка при обращении к сервису анализа отчетов",e);
         }
     }
 }

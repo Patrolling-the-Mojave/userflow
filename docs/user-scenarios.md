@@ -1,27 +1,38 @@
 # Пользовательские сценарии
 
-## 1. Загрузка студенческой работы
+## Сценарий 1: Загрузка студенческой работы
 
-```mermaid
-sequenceDiagram
-    participant C as Клиент
-    participant G as Gateway (8080)
-    participant S as Storage Service (9090)
-    participant A as Analysis Service (9091)
-    participant DB as PostgreSQL
-    participant S3 as MinIO
+1. Пользователь (студент) отправляет файл работы через клиентское приложение.
+2. Запрос поступает в **Gateway Service** на эндпоинт:  
+   `POST /files/works/{workId}/students/{studentId}/upload`
+3. **Gateway** перенаправляет запрос в **Storage Service**.
+4. **Storage Service**:
+    - Сохраняет файл в **MinIO**
+    - Записывает метаданные в **PostgreSQL**
+    - Возвращает информацию о файле (`fileId`, имя, дата загрузки)
+5. **Storage Service** асинхронно отправляет запрос в **Analysis Service** для проверки на плагиат.
+6. Пользователь получает подтверждение загрузки.
 
-    C->>G: POST /files/works/1/students/1/upload
-    Note over C,G: Multipart файл
-    
-    G->>S: POST /api/files/works/1/students/1/upload
-    S->>DB: Сохранить метаданные файла
-    S->>S3: Загрузить файл в bucket
-    S-->>G: FileDto с fileId
-    
-    G->>A: POST /analyze (асинхронно)
-    Note over G,A: Анализ в фоновом режиме
-    
-    A->>S: GET /files/{fileId}/earlier
-    A->>S: GET /files/{fileId}
-    A->>DB: Сохранить отчет анализа
+## Сценарий 2: Проверка на плагиат
+
+1. **Analysis Service** получает запрос с `fileId`.
+2. Сервис запрашивает у **Storage Service**:
+    - Содержимое текущего файла
+    - Список всех ранее загруженных файлов по той же работе
+3. Вычисляется SHA-256 хэш каждого файла.
+4. Если хэш текущего файла совпадает с хэшем любого из ранее загруженных:
+    - Устанавливается флаг `plagiarismDetected = true`
+5. Результат сохраняется в **PostgreSQL**.
+6. Отчёт становится доступен через API:  
+   `GET /reports/works/{workId}/students/{studentId}`
+
+## Сценарий 3: Получение отчёта преподавателем
+
+1. Преподаватель запрашивает отчёт по конкретной работе:  
+   `GET /reports/works/{workId}`
+2. **Gateway** перенаправляет запрос в **Analysis Service**.
+3. Сервис возвращает список всех отчётов по работе, включая:
+    - Имя студента
+    - Дату загрузки
+    - Флаг плагиата
+4. Преподаватель видит, какие работы являются оригинальными, а какие — нет.

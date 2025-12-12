@@ -1,11 +1,11 @@
-package com.hse.analisysservice;
+package com.hse.analysis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FileAnalysis {
+public class FileAnalysisService {
     public static void main(String[] args) {
-        SpringApplication.run(FileAnalysis.class, args);
+        SpringApplication.run(FileAnalysisService.class, args);
     }
 }

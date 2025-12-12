@@ -26,7 +26,7 @@ public class PublicFileController {
         return fileService.downloadFile(fileId);
     }
 
-    @DeleteMapping("/delete/{fileId}")
+    @DeleteMapping("/{fileId}/delete")
     public void delete(@PathVariable Integer fileId) {
         fileService.deleteFile(fileId);
     }

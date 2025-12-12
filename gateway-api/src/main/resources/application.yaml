@@ -1,9 +1,9 @@
 server:
   port: 8080
 analysis-service:
-  url: "http://localhost:9091"
+  url: "http://file-analysis-service:9091"
 storing-service:
-  url: "http://localhost:9090"
+  url: "http://file-storage:9090"
 
 springdoc:
   api-docs:

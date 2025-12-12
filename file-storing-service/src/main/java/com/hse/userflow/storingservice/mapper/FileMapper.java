@@ -20,12 +20,13 @@ public class FileMapper {
         return files.stream().map(FileMapper::toDto).toList();
     }
 
-    public static FileContentDto toContentDto(File file, byte[] content){
+    public static FileContentDto toContentDto(File file, byte[] content) {
         return FileContentDto.builder()
                 .fileId(file.getId())
                 .studentId(file.getStudent().getId())
                 .userName(file.getStudent().getName())
                 .workName(file.getWork().getName())
+                .workId(file.getWork().getId())
                 .originalFileName(file.getOriginalFileName())
                 .mimeType(file.getMimeType())
                 .content(content)

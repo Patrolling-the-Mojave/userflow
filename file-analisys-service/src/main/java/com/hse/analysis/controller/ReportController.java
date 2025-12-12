@@ -1,6 +1,6 @@
-package com.hse.analisysservice.controller;
+package com.hse.analysis.controller;
 
-import com.hse.analisysservice.service.ReportService;
+import com.hse.analysis.service.ReportService;
 import com.hse.userflow.dto.report.ReportDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

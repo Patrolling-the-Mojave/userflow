@@ -1,11 +1,11 @@
 package com.hse.userflow.gateway.exception;
 
-public class FileStorageException extends RuntimeException{
-    public FileStorageException(String message){
+public class FileStorageException extends RuntimeException {
+    public FileStorageException(String message) {
         super(message);
     }
 
-    public FileStorageException (String message, Throwable cause){
+    public FileStorageException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -34,12 +34,12 @@ public class WorkServiceImpl implements WorkService {
     public void deleteWork(Integer workId) {
         Work work = getWorkById(workId);
         workRepository.deleteById(workId);
-        log.debug("работа с id{} успешно удалена",workId);
+        log.debug("работа с id{} успешно удалена", workId);
     }
 
-    private Work getWorkById(Integer workId){
+    private Work getWorkById(Integer workId) {
         return workRepository.findById(workId).orElseThrow(() ->
-                new NotFoundException("работа с id "+workId+" не найдена"));
+                new NotFoundException("работа с id " + workId + " не найдена"));
 
     }
 }

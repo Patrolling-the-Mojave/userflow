@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class UserMapper {
 
-    public static User toEntity(UserCreateDto newUser){
+    public static User toEntity(UserCreateDto newUser) {
         return User.builder()
                 .name(newUser.getName())
                 .email(newUser.getEmail())
@@ -16,7 +16,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserDto toDto(User user){
+    public static UserDto toDto(User user) {
         return UserDto.builder()
                 .name(user.getName())
                 .email(user.getEmail())

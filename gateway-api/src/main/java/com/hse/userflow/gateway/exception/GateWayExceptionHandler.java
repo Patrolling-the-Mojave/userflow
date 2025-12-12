@@ -3,7 +3,9 @@ package com.hse.userflow.gateway.exception;
 import com.hse.userflow.dto.error.ErrorResponse;
 import jakarta.xml.bind.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,9 +16,9 @@ public class GateWayExceptionHandler {
 
     @ExceptionHandler(GateWayException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleGateWayException(final GateWayException exception) {
+    public ResponseEntity<ErrorResponse> handleGateWayException(final GateWayException exception) {
         log.error("gateway exception", exception);
-        return new ErrorResponse("gateway exception", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getErrorResponse());
     }
 
     @ExceptionHandler(ValidationException.class)

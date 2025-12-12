@@ -6,6 +6,7 @@ import com.hse.userflow.storingservice.exception.FileUploadException;
 import com.hse.userflow.storingservice.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,29 +17,37 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileDownloadException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleFileDownload(final FileDownloadException exception) {
+    public ResponseEntity<ErrorResponse> handleFileDownload(final FileDownloadException exception) {
         log.error("file download exception", exception);
-        return new ErrorResponse("file download", exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("file download", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(FileUploadException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleFileUpload(FileUploadException exception) {
+    public ResponseEntity<ErrorResponse> handleFileUpload(FileUploadException exception) {
         log.error("file upload exception", exception);
-        return new ErrorResponse("file upload", exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("file upload", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFound(final NotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleNotFound(final NotFoundException exception) {
         log.error("not found", exception);
-        return new ErrorResponse("not found", exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("not found", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(final Exception exception) {
+    public ResponseEntity<ErrorResponse> handleException(final Exception exception) {
         log.error("exception", exception);
-        return new ErrorResponse("exception", exception.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("exception", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 }

@@ -1,12 +1,12 @@
-package com.hse.analisysservice.mapper;
+package com.hse.analysis.mapper;
 
-import com.hse.analisysservice.model.Report;
+import com.hse.analysis.model.Report;
 import com.hse.userflow.dto.report.ReportDto;
 
 import java.util.List;
 
 public class ReportMapper {
-    public static ReportDto toDto(Report report){
+    public static ReportDto toDto(Report report) {
         return ReportDto.builder()
                 .workId(report.getWorkId())
                 .workName(report.getWorkName())
@@ -17,7 +17,7 @@ public class ReportMapper {
                 .build();
     }
 
-    public static List<ReportDto> toDto(List<Report> reports){
+    public static List<ReportDto> toDto(List<Report> reports) {
         return reports.stream().map(ReportMapper::toDto).toList();
     }
 }

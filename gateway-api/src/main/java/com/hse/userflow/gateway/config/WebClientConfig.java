@@ -17,7 +17,7 @@ public class WebClientConfig {
     private String analysisServiceUrl;
 
     @Bean
-    public WebClient fileStorageWebClient(){
+    public WebClient fileStorageWebClient() {
         return WebClient.builder()
                 .baseUrl(storingServiceUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -25,7 +25,7 @@ public class WebClientConfig {
     }
 
     @Bean
-    public WebClient analysisServiceWebClient(){
+    public WebClient analysisServiceWebClient() {
         return WebClient.builder()
                 .baseUrl(analysisServiceUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

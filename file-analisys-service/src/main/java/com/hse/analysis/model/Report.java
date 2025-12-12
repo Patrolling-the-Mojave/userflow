@@ -1,4 +1,4 @@
-package com.hse.analisysservice.model;
+package com.hse.analysis.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,9 +18,13 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "work_id", nullable = false)
     private Integer workId;
+    @Column(name = "work_name", nullable = false)
     private String workName;
+    @Column(name = "student_id", nullable = false)
     private Integer studentId;
+    @Column(name = "student_name", nullable = false)
     private String studentName;
     private Boolean plagiarismDetected;
     private LocalDateTime uploadedAt;

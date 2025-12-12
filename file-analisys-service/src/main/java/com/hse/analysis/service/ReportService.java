@@ -1,4 +1,4 @@
-package com.hse.analisysservice.service;
+package com.hse.analysis.service;
 
 import com.hse.userflow.dto.report.ReportDto;
 

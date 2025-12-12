@@ -1,7 +1,9 @@
-package com.hse.analisysservice.service.impl;
+package com.hse.analysis.service.impl;
 
-import com.hse.analisysservice.repository.ReportRepository;
-import com.hse.analisysservice.service.ReportService;
+import com.hse.analysis.exception.NotFoundException;
+import com.hse.analysis.model.Report;
+import com.hse.analysis.repository.ReportRepository;
+import com.hse.analysis.service.ReportService;
 import com.hse.userflow.dto.report.ReportDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.hse.analisysservice.mapper.ReportMapper.toDto;
+import static com.hse.analysis.mapper.ReportMapper.toDto;
 
 @Service
 @Slf4j
@@ -25,8 +27,10 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ReportDto findByWorkIdAndStudentId(Integer studentId, Integer workId) {
+    public ReportDto findByWorkIdAndStudentId(Integer workId, Integer studentId) {
         log.debug("запрос на получение отчета по работе{} студента {}", workId, studentId);
-        return toDto(reportRepository.findByWorkIdAndStudentId(workId, studentId));
+        Report report = reportRepository.findByWorkIdAndStudentId(workId, studentId).orElseThrow(() ->
+                new NotFoundException("отчет пользователя " + studentId + " не найден"));
+        return toDto(report);
     }
 }

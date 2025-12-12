@@ -1,11 +1,12 @@
-package com.hse.analisysservice.service.impl;
+package com.hse.analysis.service.impl;
 
-import com.hse.analisysservice.model.Report;
-import com.hse.analisysservice.repository.ReportRepository;
-import com.hse.analisysservice.service.ReportAnalysisService;
-import com.hse.analisysservice.service.client.FileStorageClient;
-import com.hse.userflow.dto.report.AnalysisRequest;
+import com.hse.analysis.exception.RequestAlreadyExistsException;
+import com.hse.analysis.model.Report;
+import com.hse.analysis.repository.ReportRepository;
+import com.hse.analysis.service.ReportAnalysisService;
+import com.hse.analysis.service.client.FileStorageClient;
 import com.hse.userflow.dto.file.FileContentDto;
+import com.hse.userflow.dto.report.AnalysisRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,11 @@ public class ReportAnalysisServiceImpl implements ReportAnalysisService {
                 break;
             }
         }
-
+        if (reportRepository.findByWorkIdAndStudentId(request.getWorkId(), request.getStudentId()).isPresent()) {
+            throw new RequestAlreadyExistsException("отчет пользователя " + request.getStudentId() + " для работы " + request.getWorkId() + " уже существует");
+        }
         Report report = Report.builder()
-                .workId(currentFile.getFileId())
+                .workId(currentFile.getWorkId())
                 .uploadedAt(LocalDateTime.now())
                 .studentName(currentFile.getUserName())
                 .workName(currentFile.getWorkName())

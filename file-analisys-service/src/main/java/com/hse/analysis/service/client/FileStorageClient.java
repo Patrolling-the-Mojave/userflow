@@ -1,6 +1,6 @@
-package com.hse.analisysservice.service.client;
+package com.hse.analysis.service.client;
 
-import com.hse.analisysservice.exception.AnalysisServiceException;
+import com.hse.analysis.exception.AnalysisServiceException;
 import com.hse.userflow.dto.file.FileContentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class FileStorageClient {
         }
     }
 
-    public FileContentDto getFileContentFromStorage(Integer fileId){
+    public FileContentDto getFileContentFromStorage(Integer fileId) {
         try {
             String url = storingServiceUrl + "/files/{fileId}";
             ResponseEntity<FileContentDto> response = restTemplate.getForEntity(url, FileContentDto.class, fileId);

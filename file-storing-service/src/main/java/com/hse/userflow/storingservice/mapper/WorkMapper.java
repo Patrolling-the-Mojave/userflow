@@ -7,14 +7,14 @@ import com.hse.userflow.storingservice.model.Work;
 import java.time.LocalDateTime;
 
 public class WorkMapper {
-    public static WorkDto toDto(Work work){
+    public static WorkDto toDto(Work work) {
         return WorkDto.builder()
                 .name(work.getName())
                 .description(work.getDescription())
                 .build();
     }
 
-    public static Work toEntity(WorkCreateDto newWork){
+    public static Work toEntity(WorkCreateDto newWork) {
         return Work.builder()
                 .name(newWork.getName())
                 .description(newWork.getDescription())

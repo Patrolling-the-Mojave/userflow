@@ -13,12 +13,12 @@ public class WorkController {
     private final WorkService workService;
 
     @PostMapping
-    public WorkDto addWork(@RequestBody WorkCreateDto newWork){
+    public WorkDto addWork(@RequestBody WorkCreateDto newWork) {
         return workService.addWord(newWork);
     }
 
     @DeleteMapping("/{workId}")
-    public void deleteWork(@PathVariable Integer workId){
+    public void deleteWork(@PathVariable Integer workId) {
         workService.deleteWork(workId);
     }
 
